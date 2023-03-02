@@ -1,0 +1,5 @@
+topics:
+  -
+    topic: /roboy/pinky/control/joint_targets  # Topic name on both ROS 1 and ROS 2
+    type: sensor_msgs/msg/JointState  # Type of topic to bridge
+    queue_size: 1  # Queue size
