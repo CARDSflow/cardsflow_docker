@@ -3,13 +3,13 @@ Dockerized kindyn &amp; cardsflow RViz with ROS1 &amp; ROS2 support
 
 - To **build** the Docker image, clone this repository, navigate to its root and run
 ```bash
-docker build -t ros1-bridge-roboy .
+docker compose build
 ```
 
 - To **instantiate** a Docker container with `ros1-bridge-roboy` image run
 ```bash
 xhost local:root 
-docker run -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=${DISPLAY:0} -ti -d ros1-bridge-roboy bash
+docker compose up
 ```
 The above command will automatically launch necessary ROS nodes with required display settings and open RViz after about 5 seconds.
 

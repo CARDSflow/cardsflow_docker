@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  dev:
+    volumes:
+      - '/tmp/.X11-unix:/tmp/.X11-unix'   #
+      - '${KINDYN_PATH}:/roboy3/src/kindyn'
+    environment:
+      - 'DISPLAY=${DISPLAY}'              # set DISPLAY in .
+    tty: true                             # -t
+    stdin_open: true                      # -i
+    privileged: true                      # --privileged
+    image: ros1-bridge-roboy
+    build:
+      context: .
+      dockerfile: Dockerfile_dev
+    command: bash
