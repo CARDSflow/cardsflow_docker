@@ -13,6 +13,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y ros-$ROS1_DISTRO-geometry-msgs ros-$ROS1_DISTRO-moveit-msgs ros-$ROS1_DISTRO-actionlib-msgs ros-$ROS1_DISTRO-actionlib ros-$ROS1_DISTRO-tf ros-$ROS1_DISTRO-tf-conversions ros-$ROS1_DISTRO-cv-bridge ros-$ROS1_DISTRO-image-transport ros-$ROS1_DISTRO-rviz ros-$ROS1_DISTRO-sensor-msgs ros-$ROS1_DISTRO-rqt-gui ros-$ROS1_DISTRO-rqt-gui-cpp ros-$ROS1_DISTRO-roslint ros-$ROS1_DISTRO-rosbag ros-$ROS1_DISTRO-controller-interface \
 ros-$ROS1_DISTRO-robot-state-publisher ros-$ROS1_DISTRO-controller-manager ros-$ROS1_DISTRO-effort-controllers ros-$ROS1_DISTRO-eigen-conversions ros-$ROS1_DISTRO-pcl-ros 
 
+# TODO install everything for the ROS2 kindyn Repo
+
+
 RUN git clone https://github.com/Roboy/roboy3
 
 ENV ROBOY3_WS=/roboy3
@@ -21,7 +24,6 @@ WORKDIR $ROBOY3_WS
 RUN git submodule init && git submodule update --recursive
 
 RUN rm -r $ROBOY3_WS/src/kindyn/*
-#TODO copy whole folder?!?!?
 COPY kindyn/.idea          $ROBOY3_WS/src/kindyn/.idea
 COPY kindyn/cmake          $ROBOY3_WS/src/kindyn/cmake
 COPY kindyn/include/kindyn $ROBOY3_WS/src/kindyn/include/kindyn
@@ -39,6 +41,7 @@ COPY kindyn/package.xml                              $ROBOY3_WS/src/kindyn/packa
 COPY kindyn/README.md                                $ROBOY3_WS/src/kindyn/README.md
 COPY kindyn/TorquePositionController_plugin.xml      $ROBOY3_WS/src/kindyn/TorquePositionController_plugin.xml
 
+#TODO copy whole folder, but how?
 #RUN rm -r $ROBOY3_WS/src/kindyn/*
 #COPY kindyn/* $ROBOY3_WS/src/kindyn/
 #RUN rm -r $ROBOY3_WS/src/kindyn/
@@ -60,7 +63,9 @@ RUN mkdir build && cd build \
 RUN apt-get install -y ros-$ROS1_DISTRO-cmake-modules ros-$ROS1_DISTRO-genpy vim tmux
 RUN touch /roboy3/src/ball_in_socket_estimator/CATKIN_IGNORE
 WORKDIR $ROBOY3_WS
-RUN bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash && catkin_make"
+RUN bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash && catkin_make" # TODO FAIL
+
+# RUN bash -c "source /opt/ros/${ROS2_DISTRO}/setup.bash && colcon build --packages-select kindyn --build-base ./build2 --install-base ./install2"
 
 COPY bridge.yaml /roboy3/src/
 COPY autostart.sh /roboy3/src

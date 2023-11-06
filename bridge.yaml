@@ -1,5 +1,113 @@
 topics:
+  # -
+  #   topic: /clicked_point  # Topic name on both ROS 1 and ROS 2
+  #   type: geometry_msgs/PointStamped  # Type of topic to bridge
+  #   queue_size: 1  # Queue size  
+  # -
+  #   topic: /controller_type  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_simulation_msgs/ControllerType  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /initialpose  # Topic name on both ROS 1 and ROS 2
+  #   type: geometry_msgs/PoseWithCovarianceStamped  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /interactive_markers/feedback  # Topic name on both ROS 1 and ROS 2
+  #   type: visualization_msgs/InteractiveMarkerFeedback  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /interactive_markers/update  # Topic name on both ROS 1 and ROS 2
+  #   type: visualization_msgs/InteractiveMarkerUpdate  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /interactive_markers/update_full  # Topic name on both ROS 1 and ROS 2
+  #   type: visualization_msgs/InteractiveMarkerInit  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /move_base_simple/goal  # Topic name on both ROS 1 and ROS 2
+  #   type: geometry_msgs/PoseStamped  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/SystemStatus  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_middleware_msgs/SystemStatus  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/cardsflow_joint_states  # Topic name on both ROS 1 and ROS 2
+  #   type: sensor_msgs/JointState  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/joint_state_target  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_simulation_msgs/JointState  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
   -
     topic: /roboy/pinky/control/joint_targets  # Topic name on both ROS 1 and ROS 2
     type: sensor_msgs/msg/JointState  # Type of topic to bridge
     queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/robot_state  # Topic name on both ROS 1 and ROS 2
+  #   type: geometry_msgs/PoseStamped  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/robot_state_target  # Topic name on both ROS 1 and ROS 2
+  #   type: geometry_msgs/PoseStamped  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/rviz_joint_states  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_simulation_msgs/JointState  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/tendon_state  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_simulation_msgs/Tendon  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/tendon_state_ext  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_simulation_msgs/Tendon  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/tendon_state_motor  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_simulation_msgs/Tendon  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/tendon_state_target  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_simulation_msgs/Tendon  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/control/zero_joints  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_control_msgs/Strings  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/middleware/MotorCommand  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_middleware_msgs/MotorCommand  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/middleware/MotorInfo  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_middleware_msgs/MotorInfo  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/middleware/MotorState  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_middleware_msgs/MotorState  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/middleware/RoboyState  # Topic name on both ROS 1 and ROS 2
+  #   type: roboy_middleware_msgs/RoboyState  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /roboy/pinky/simulation/joint_targets  # Topic name on both ROS 1 and ROS 2
+  #   type: sensor_msgs/JointState  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /tf  # Topic name on both ROS 1 and ROS 2
+  #   type: tf2_msgs/TFMessage  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /tf_static  # Topic name on both ROS 1 and ROS 2
+  #   type: tf2_msgs/TFMessage  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /visualization_marker  # Topic name on both ROS 1 and ROS 2
+  #   type: visualization_msgs/Marker  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
+  # -
+  #   topic: /visualization_marker_array  # Topic name on both ROS 1 and ROS 2
+  #   type: visualization_msgs/MarkerArray  # Type of topic to bridge
+  #   queue_size: 1  # Queue size
