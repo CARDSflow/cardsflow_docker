@@ -14,7 +14,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y ros-$ROS
 ros-$ROS1_DISTRO-robot-state-publisher ros-$ROS1_DISTRO-controller-manager ros-$ROS1_DISTRO-effort-controllers ros-$ROS1_DISTRO-eigen-conversions ros-$ROS1_DISTRO-pcl-ros 
 
 # TODO install everything for the ROS2 kindyn Repo
-
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y python3-colcon-common-extensions
 
 RUN git clone https://github.com/Roboy/roboy3
 
@@ -24,28 +24,49 @@ WORKDIR $ROBOY3_WS
 RUN git submodule init && git submodule update --recursive
 
 RUN rm -r $ROBOY3_WS/src/kindyn/*
-COPY kindyn/.idea          $ROBOY3_WS/src/kindyn/.idea
-COPY kindyn/cmake          $ROBOY3_WS/src/kindyn/cmake
-COPY kindyn/include/kindyn $ROBOY3_WS/src/kindyn/include/kindyn
-COPY kindyn/launch         $ROBOY3_WS/src/kindyn/launch
-COPY kindyn/scripts        $ROBOY3_WS/src/kindyn/scripts
-COPY kindyn/src            $ROBOY3_WS/src/kindyn/src
+#RUN rm -r $ROBOY3_WS/src/common_utilities/
+#RUN rm -r $ROBOY3_WS/src/roboy_communication/
+#RUN rm -r $ROBOY3_WS/src/robots/
 
-COPY kindyn/.gitignore                               $ROBOY3_WS/src/kindyn/.gitignore
-COPY kindyn/CableLengthController_plugin.xml         $ROBOY3_WS/src/kindyn/CableLengthController_plugin.xml
-COPY kindyn/CableLengthVelocityController_plugin.xml $ROBOY3_WS/src/kindyn/CableLengthVelocityController_plugin.xml
-COPY kindyn/CMakeLists.txt                           $ROBOY3_WS/src/kindyn/CMakeLists.txt
-COPY kindyn/ForcePositionController_plugin.xml       $ROBOY3_WS/src/kindyn/ForcePositionController_plugin.xml
-COPY kindyn/LICENSE                                  $ROBOY3_WS/src/kindyn/LICENSE
-COPY kindyn/package.xml                              $ROBOY3_WS/src/kindyn/package.xml
-COPY kindyn/README.md                                $ROBOY3_WS/src/kindyn/README.md
-COPY kindyn/TorquePositionController_plugin.xml      $ROBOY3_WS/src/kindyn/TorquePositionController_plugin.xml
+COPY kindyn $ROBOY3_WS/src/kindyn
 
-#TODO copy whole folder, but how?
-#RUN rm -r $ROBOY3_WS/src/kindyn/*
-#COPY kindyn/* $ROBOY3_WS/src/kindyn/
-#RUN rm -r $ROBOY3_WS/src/kindyn/
-#COPY kindyn/ $ROBOY3_WS/src/
+RUN pwd
+RUN ls -la
+RUN ls -la ./src/kindyn
+
+# COPY kindyn/.idea          $ROBOY3_WS/src/kindyn/.idea
+# COPY kindyn/cmake          $ROBOY3_WS/src/kindyn/cmake
+# COPY kindyn/include/kindyn $ROBOY3_WS/src/kindyn/include/kindyn
+# COPY kindyn/launch         $ROBOY3_WS/src/kindyn/launch
+# COPY kindyn/scripts        $ROBOY3_WS/src/kindyn/scripts
+# COPY kindyn/src            $ROBOY3_WS/src/kindyn/src
+
+# COPY kindyn/.gitignore                               $ROBOY3_WS/src/kindyn/.gitignore
+# COPY kindyn/CableLengthController_plugin.xml         $ROBOY3_WS/src/kindyn/CableLengthController_plugin.xml
+# COPY kindyn/CableLengthVelocityController_plugin.xml $ROBOY3_WS/src/kindyn/CableLengthVelocityController_plugin.xml
+# COPY kindyn/CMakeLists.txt                           $ROBOY3_WS/src/kindyn/CMakeLists.txt
+# COPY kindyn/ForcePositionController_plugin.xml       $ROBOY3_WS/src/kindyn/ForcePositionController_plugin.xml
+# COPY kindyn/LICENSE                                  $ROBOY3_WS/src/kindyn/LICENSE
+# COPY kindyn/package.xml                              $ROBOY3_WS/src/kindyn/package.xml
+# COPY kindyn/README.md                                $ROBOY3_WS/src/kindyn/README.md
+# COPY kindyn/TorquePositionController_plugin.xml      $ROBOY3_WS/src/kindyn/TorquePositionController_plugin.xml
+
+ENV ROS2_ROBOY3_WS=/ros2_roboy3
+WORKDIR $ROS2_ROBOY3_WS
+
+RUN mkdir ./src/
+WORKDIR $ROS2_ROBOY3_WS/src/
+
+#RUN git clone https://github.com/Roboy/common_utilities.git -b ros2
+#RUN git clone https://github.com/Roboy/roboy3_models.git
+#RUN git clone https://github.com/Roboy/roboy_communication.git -b dashing
+
+COPY ros2_kindyn/include/ros2_kindyn $ROS2_ROBOY3_WS/src/ros2_kindyn/include/ros2_kindyn
+COPY ros2_kindyn/src                 $ROS2_ROBOY3_WS/src/ros2_kindyn/src
+COPY ros2_kindyn/CMakeLists.txt      $ROS2_ROBOY3_WS/src/ros2_kindyn/CMakeLists.txt
+COPY ros2_kindyn/package.xml         $ROS2_ROBOY3_WS/src/ros2_kindyn/package.xml
+
+# RUN colcon build
 
 WORKDIR $ROBOY3_WS/src/idyntree
 RUN mkdir build && cd build \
@@ -63,9 +84,10 @@ RUN mkdir build && cd build \
 RUN apt-get install -y ros-$ROS1_DISTRO-cmake-modules ros-$ROS1_DISTRO-genpy vim tmux
 RUN touch /roboy3/src/ball_in_socket_estimator/CATKIN_IGNORE
 WORKDIR $ROBOY3_WS
-RUN bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash && catkin_make" # TODO FAIL
+RUN bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash && catkin_make" # TODO fails when roboy_communication or common_utilities is removed
 
-# RUN bash -c "source /opt/ros/${ROS2_DISTRO}/setup.bash && colcon build --packages-select kindyn --build-base ./build2 --install-base ./install2"
+# WORKDIR $ROS2_ROBOY3_WS
+# RUN bash -c "source /opt/ros/${ROS2_DISTRO}/setup.bash && colcon build --packages-select kindyn"
 
 COPY bridge.yaml /roboy3/src/
 COPY autostart.sh /roboy3/src

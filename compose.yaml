@@ -4,8 +4,9 @@ services:
     volumes:
       - '/tmp/.X11-unix:/tmp/.X11-unix'   #
       - '${KINDYN_PATH}:/roboy3/src/kindyn'
+      - '${ROS2_KINDYN_PATH}:/ros2_roboy3/src/ros2_kindyn'
     environment:
-      - 'DISPLAY=${DISPLAY}'              # set DISPLAY in .
+      - 'DISPLAY=${DISPLAY}'              # set DISPLAY in .env
     tty: true                             # -t
     stdin_open: true                      # -i
     privileged: true                      # --privileged
@@ -14,3 +15,9 @@ services:
       context: .
       dockerfile: Dockerfile_dev
     command: bash
+
+
+# xhost local:root 
+# docker run -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=${DISPLAY:0} -ti -d ros1-bridge-roboy bash
+
+# docker compose up
