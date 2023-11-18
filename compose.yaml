@@ -5,6 +5,9 @@ services:
       - '/tmp/.X11-unix:/tmp/.X11-unix'   #
       - '${KINDYN_PATH}:/roboy3/src/kindyn'
       - '${ROS2_KINDYN_PATH}:/ros2_roboy3/src/ros2_kindyn'
+      - '${ROS2_ROBOY3_MODELS_PATH}:/ros2_roboy3/src/ros2_roboy3_models'
+      - '${ROS2_COMMON_UTILITIES_PATH}:/ros2_roboy3/src/ros2_common_utilities'
+      - '${ROS2_ROBOY_COMMUNICATION_PATH}:/ros2_roboy3/src/ros2_roboy_communication'
     environment:
       - 'DISPLAY=${DISPLAY}'              # set DISPLAY in .env
     tty: true                             # -t

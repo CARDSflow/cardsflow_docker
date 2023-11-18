@@ -14,7 +14,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y ros-$ROS
 ros-$ROS1_DISTRO-robot-state-publisher ros-$ROS1_DISTRO-controller-manager ros-$ROS1_DISTRO-effort-controllers ros-$ROS1_DISTRO-eigen-conversions ros-$ROS1_DISTRO-pcl-ros 
 
 # TODO install everything for the ROS2 kindyn Repo
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y python3-colcon-common-extensions
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y python3-colcon-common-extensions ros-$ROS2_DISTRO-ros2-control ros-$ROS2_DISTRO-geometry2 ros-$ROS2_DISTRO-effort-controllers
+RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 
 RUN git clone https://github.com/Roboy/roboy3
 
@@ -24,15 +25,23 @@ WORKDIR $ROBOY3_WS
 RUN git submodule init && git submodule update --recursive
 
 RUN rm -r $ROBOY3_WS/src/kindyn/*
-#RUN rm -r $ROBOY3_WS/src/common_utilities/
-#RUN rm -r $ROBOY3_WS/src/roboy_communication/
-#RUN rm -r $ROBOY3_WS/src/robots/
-
 COPY kindyn $ROBOY3_WS/src/kindyn
 
-RUN pwd
+
+ENV ROS2_ROBOY3_WS=/ros2_roboy3
+WORKDIR $ROS2_ROBOY3_WS
+RUN mkdir ./src/
+WORKDIR $ROS2_ROBOY3_WS/src
+
+#RUN rm -r $ROBOY3_WS/src/robots/
+COPY ros2_roboy3_models $ROS2_ROBOY3_WS/src/ros2_roboy3_models
+#RUN rm -r $ROBOY3_WS/src/common_utilities/
+COPY ros2_common_utilities $ROS2_ROBOY3_WS/src/ros2_common_utilities
+#RUN rm -r $ROBOY3_WS/src/roboy_communication/
+COPY ros2_roboy_communication $ROS2_ROBOY3_WS/src/ros2_roboy_communication
+COPY ros2_kindyn $ROS2_ROBOY3_WS/src/ros2_kindyn
+
 RUN ls -la
-RUN ls -la ./src/kindyn
 
 # COPY kindyn/.idea          $ROBOY3_WS/src/kindyn/.idea
 # COPY kindyn/cmake          $ROBOY3_WS/src/kindyn/cmake
@@ -51,22 +60,15 @@ RUN ls -la ./src/kindyn
 # COPY kindyn/README.md                                $ROBOY3_WS/src/kindyn/README.md
 # COPY kindyn/TorquePositionController_plugin.xml      $ROBOY3_WS/src/kindyn/TorquePositionController_plugin.xml
 
-ENV ROS2_ROBOY3_WS=/ros2_roboy3
-WORKDIR $ROS2_ROBOY3_WS
-
-RUN mkdir ./src/
-WORKDIR $ROS2_ROBOY3_WS/src/
-
+#WORKDIR $ROS2_ROBOY3_WS/src/
 #RUN git clone https://github.com/Roboy/common_utilities.git -b ros2
 #RUN git clone https://github.com/Roboy/roboy3_models.git
 #RUN git clone https://github.com/Roboy/roboy_communication.git -b dashing
 
-COPY ros2_kindyn/include/ros2_kindyn $ROS2_ROBOY3_WS/src/ros2_kindyn/include/ros2_kindyn
-COPY ros2_kindyn/src                 $ROS2_ROBOY3_WS/src/ros2_kindyn/src
-COPY ros2_kindyn/CMakeLists.txt      $ROS2_ROBOY3_WS/src/ros2_kindyn/CMakeLists.txt
-COPY ros2_kindyn/package.xml         $ROS2_ROBOY3_WS/src/ros2_kindyn/package.xml
-
-# RUN colcon build
+# COPY ros2_kindyn/include/ros2_kindyn $ROS2_ROBOY3_WS/src/ros2_kindyn/include/ros2_kindyn
+# COPY ros2_kindyn/src                 $ROS2_ROBOY3_WS/src/ros2_kindyn/src
+# COPY ros2_kindyn/CMakeLists.txt      $ROS2_ROBOY3_WS/src/ros2_kindyn/CMakeLists.txt
+# COPY ros2_kindyn/package.xml         $ROS2_ROBOY3_WS/src/ros2_kindyn/package.xml
 
 WORKDIR $ROBOY3_WS/src/idyntree
 RUN mkdir build && cd build \
@@ -81,17 +83,32 @@ RUN mkdir build && cd build \
  && cmake .. \
  && sudo make -j4 install
 
+WORKDIR $ROS2_ROBOY3_WS/src/
+RUN git clone https://github.com/coin-or/qpOASES.git
+WORKDIR $ROS2_ROBOY3_WS/src/qpOASES
+RUN ls -la
+RUN pwd
+RUN mkdir build && cd build \
+ && cmake .. \
+ && sudo make -j4 install
+RUN ls -la
+RUN pwd
+
 RUN apt-get install -y ros-$ROS1_DISTRO-cmake-modules ros-$ROS1_DISTRO-genpy vim tmux
 RUN touch /roboy3/src/ball_in_socket_estimator/CATKIN_IGNORE
 WORKDIR $ROBOY3_WS
 RUN bash -c "source /opt/ros/${ROS1_DISTRO}/setup.bash && catkin_make" # TODO fails when roboy_communication or common_utilities is removed
 
-# WORKDIR $ROS2_ROBOY3_WS
-# RUN bash -c "source /opt/ros/${ROS2_DISTRO}/setup.bash && colcon build --packages-select kindyn"
-
 COPY bridge.yaml /roboy3/src/
 COPY autostart.sh /roboy3/src
 RUN chmod +x /roboy3/src/autostart.sh
 COPY default.rviz /opt/ros/noetic/share/rviz/
+
+WORKDIR $ROS2_ROBOY3_WS/
+
+RUN ls -la ./src
+RUN pwd
+
+RUN bash -c "source /opt/ros/${ROS2_DISTRO}/setup.bash && colcon build"
 
 ENTRYPOINT ["bash", "-c", "/roboy3/src/autostart.sh"] 
