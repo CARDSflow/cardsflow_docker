@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  joyfull_laplace:
+    image: cardsflow
+    container_name: joyfull_laplace
+    volumes:
+      - /home/roboy/workspace/roboy3:/roboy3
+        #devices:
+        #- "/dev/ttyUSB0:/dev/ttyUSB0"
+    #   - "/dev/ttyUSB1:/dev/ttyUSB1"
+    network_mode: "host"

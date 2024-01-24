@@ -1,0 +1,25 @@
+source /roboy3/devel/setup.bash
+
+export ROS_IP=192.168.1.105
+
+alias pinky-kindyn='roslaunch kindyn robot.launch simulated:=false robot_name:=upper_body external_robot_state:=false'
+alias ik="rosparam set /publish_cardsflow 1 && rosrun bulletroboy ik.py"
+
+alias orin="ssh roboy@192.168.1.104"
+alias fpga="ssh root@192.168.1.196"
+
+function run_kindyn() {
+    roslaunch kindyn robot.launch simulated:=false robot_name:=upper_body external_robot_state:=false
+}
+
+function run_ik() {
+	rosparam set /publish_cardsflow 1 && rosrun bulletroboy ik.py
+}
+
+function run_wheels_connector() {
+	roslaunch common_utilities serial_nodes.launch
+}
+
+function run_wheels_controller() {
+	/roboy3/src/esp-wheelchair/software/ir_drive_simplified.py
+}

@@ -1,0 +1,13 @@
+[Unit]
+Description=Roboy Server Daemon
+
+[Service]
+Type=forking
+User=roboy
+ExecStart=/usr/bin/tmux new-session -s roboy -d; send-keys 'sleep 10; killall roscore; roscore&' C-m; send-keys 'sleep 5; pinky-kindyn external_robot_state:=false --wait' C-m; split-window -h; send-keys "sleep 60; ssh root@192.168.1.196 -t \"bash -lic 'plexus' \"" C-m; split-window -v; send-keys 'sleep 60; ssh -t roboy@192.168.1.104 ./autostart.sh; ik' C-m; split-window -v; send-keys 'sleep 40; roslaunch common_utilities serial_nodes.launch' C-m; split-window -v; send-keys 'sleep 60; ssh -t roboy@192.168.1.104 /home/roboy/run-docker.sh; rosrun roboy_state_estimator ir_sensor_publisher.py' C-m; select-pane -t 0; split-window -v; send-keys -t 1 'sleep 60; python3 /home/roboy/ir_drive_simplified.py' C-m;
+
+ExecStop=/usr/bin/tmux kill-session -t roboy
+
+
+[Install]
+WantedBy=default.target
